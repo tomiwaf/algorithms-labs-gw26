@@ -72,19 +72,19 @@ def bubble_sort(arr):
 > | | | $9 > 5$ | SWAP | `[2, 5, 1, 5, 9, 6]` | |
 > | | | $9 > 6$ | SWAP | `[2, 5, 1, 5, 6, 9]` | `[9]` |
 > | **2 (TODO)** | $j=0 \dots 3$ | $arr[0]$ vs $arr[1]$: | | | |
-> | | | $arr[1]$ vs $arr[2]$: | | | |
-> | | | $arr[2]$ vs $arr[3]$: | | | |
-> | | | $arr[3]$ vs $arr[4]$: | | `[                      ]` | `[       ]` |
-> | **3 (TODO)** | $j=0 \dots 2$ | $arr[0]$ vs $arr[1]$: | | | |
-> | | | $arr[1]$ vs $arr[2]$: | | | |
-> | | | $arr[2]$ vs $arr[3]$: | | `[                      ]` | `[          ]` |
-> | **4 (TODO)** | $j=0 \dots 1$ | $arr[0]$ vs $arr[1]$: | | | |
-> | | | $arr[1]$ vs $arr[2]$: | | `[                      ]` | `[             ]` |
-> | **Exit** | Did any swaps occur in Pass 4? Explain early stopping: | | | `[                      ]` | **Sorted!** |
+> | | | $arr[1]$ vs $arr[2]$: | KEEP |`[2, 5, 1, 5, 6, 9]` | |
+> | | | $arr[2]$ vs $arr[3]$: |SWAP | `[2, 1, 5, 5, 6, 9]`| `[5]`|
+> | | | $arr[3]$ vs $arr[4]$: | KEEP| `[2, 1, 5, 5, 6, 9]` | `[6,9]` |
+> | **3 (TODO)** | $j=0 \dots 2$ | $arr[0]$ vs $arr[1]$: |SWAP| `[1, 2, 5, 5, 6, 9]`| |
+> | | | $arr[1]$ vs $arr[2]$: |KEEP|`[1, 2, 5, 5, 6, 9]` | |
+> | | | $arr[2]$ vs $arr[3]$: |KEEP| `[1, 2, 5, 5, 6, 9]` | `[5,6,9]` |
+> | **4 (TODO)** | $j=0 \dots 1$ | $arr[0]$ vs $arr[1]$: | KEEP| `[1, 2, 5, 5, 6, 9]`| |
+> | | | $arr[1]$ vs $arr[2]$: |KEEP | `[1, 2, 5, 5, 6, 9]` | `[5,5,6,9]` |
+> | **Exit** | Did any swaps occur in Pass 4? Explain early stopping: No, we stopped early because since there were no swaps in pass 4, the array is now sorted.| | | `[1, 2, 5, 5, 6, 9]` | **Sorted!** |
 > 
 > ```text
-> Total Comparisons performed: 
-> Total Swaps performed: 
+> Total Comparisons performed: 14
+> Total Swaps performed: 6
 > ```
 > *(Tip: You can verify your trace by running `python sorting_trace.py`)*
 
@@ -121,13 +121,13 @@ def insertion_sort(arr):
 > |---|---|---|---|---|---|
 > | **Init** | - | - | Prefix of length 1 is sorted | `[7, 3, 5, 8, 2]` | `[7]` |
 > | **$i=1$ (Example)** | `3` | $7 > 3 \to$ shift $7$ right | Place `3` at index 0 | `[3, 7, 5, 8, 2]` | `[3, 7]` |
-> | **$i=2$ (TODO)** | `5` | | | `[               ]` | `[         ]` |
-> | **$i=3$ (TODO)** | `8` | | | `[               ]` | `[            ]` |
-> | **$i=4$ (TODO)** | `2` | | | `[               ]` | `[               ]` |
+> | **$i=2$ (TODO)** | `5` |5 > 3, go to 7, 5 < 7 |place 5 between 3 and 7 at index 1 | `[3, 5, 7, 8, 2]` | `[3, 5, 7]` |
+> | **$i=3$ (TODO)** | `8` |8>3, go to 5, 8>5, go to 7, 8>7 |Place 8 at index 3 | `[3, 5, 7, 8, 2]` | `[3, 5, 7, 8]` |
+> | **$i=4$ (TODO)** | `2` | 2<3|Place 2 at index 0 | `[2, 3, 5, 7, 8]` | `[2, 3, 5, 7, 8]` |
 > 
 > ```text
-> Total Comparisons performed: 
-> Total Shifts performed: 
+> Total Comparisons performed: 9
+> Total Shifts performed: 6
 > ```
 
 ---
@@ -146,15 +146,15 @@ A sorting algorithm is **stable** if elements with equal keys appear in the outp
 > ```text
 > TODO 1.3A (Inversions & Shifts):
 > List all inversions (pairs of indices (i, j) where i < j and arr[i] > arr[j])
-> in the initial array [7, 3, 5, 8, 2]:
-> - Inversions: 
-> - Total number of inversions: 
-> - Does this total exactly equal the number of shifts you counted in Task 1.2? (Yes/No): 
+> in the initial array [7, 3, 5, 8, 2]: (0,1), (0,2), (0,4), (1,4), (2,4),(3,4)
+> - Inversions: 6
+> - Total number of inversions: 6
+> - Does this total exactly equal the number of shifts you counted in Task 1.2? (Yes/No): Yes
 > 
 > TODO 1.3B (Early Stopping Flag):
 > Why does Bubble Sort require an explicit boolean flag (`swapped`) to achieve
 > O(N) best-case time on sorted data, whereas Insertion Sort naturally achieves O(N) without any flag?
-> A: 
+> A: Bubble only swaps if there is a reason to, bubble sort swapping when things are already in order would cause the algorithm to take more comparisons than necessary and in turn making the algorithm slower
 > 
 > TODO 1.3C (Stability):
 > If a programmer changes line 33 of Bubble Sort to `if arr[j] >= arr[j + 1]:`,
