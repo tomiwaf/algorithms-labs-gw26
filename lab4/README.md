@@ -154,11 +154,11 @@ traversal of the tree after insertion. The first two rows are worked.
 |---|---|---|---|
 | 40 | None (Root) | Root | `[40]` |
 | 20 | 40 | Left | `[20, 40]` |
-| 60 | TODO | TODO | TODO |
-| 10 | TODO | TODO | TODO |
-| 30 | TODO | TODO | TODO |
-| 50 | TODO | TODO | TODO |
-| 70 | TODO | TODO | TODO |
+| 60 | 40 | Right | `[20, 40, 60]` |
+| 10 | 20 | Left | `[10, 20, 40, 60]`|
+| 30 | 20 | Right | `[10, 20, 30, 40, 60]` |
+| 50 | 60 | Left | `[10, 20, 30, 40, 50, 60]` |
+| 70 | 60 | Right | `[10, 20, 30, 40, 50, 60, 70]` |
 
 ### 1.2 Trace: Deletion
 
@@ -177,8 +177,8 @@ worked.
 | Target key | Deletion case | Successor key | Node spliced / replaced | In-order traversal afterward |
 |---|---|---|---|---|
 | 10 | 0 children (leaf) | None | 10 | `[20, 30, 40, 50, 60, 70]` |
-| 20 | TODO | TODO | TODO | TODO |
-| 40 | TODO | TODO | TODO | TODO |
+| 20 | 1 child | None | 20 replaced by 30 | `[30, 40, 50, 60, 70]` |
+| 40 | 2 children | 50 | 50 replaces 40 | `[30, 50, 60, 70]` |
 
 ### 1.3 Implementation
 
@@ -194,10 +194,10 @@ python3 bst_practice.py
 ### 1.4 Short answers
 
 **TODO 1.4A:** In a two-child deletion (Case 3), why is the in-order successor
-guaranteed never to have a left child?
+guaranteed never to have a left child? Becaue the in order successor is supposed to be the smallest element greater than the root, so the only element that could be its left child is the root, which cannot happen, so there is no left child.
 
 **TODO 1.4B:** When deleting the root node of the tree, what special pointer
-updates must take place regarding `tree.root` and `node.parent`?
+updates must take place regarding `tree.root` and `node.parent`? tree.root must be changed to point to the node replacing the old root and the node.parent must point to null
 
 All three basic BST operations (search, insert, delete) run in $O(h)$ time,
 where $h$ is the height of the tree. The iterative implementations require
@@ -229,8 +229,8 @@ visited, in order, and the total number of key comparisons.
 
 | Tree | Search path to key `7` | Total comparisons |
 |---|---|---|
-| Degenerate BST | TODO | TODO |
-| Balanced BST | TODO | TODO |
+| Degenerate BST | 1->2->3->4->5->6->7 | 7 |
+| Balanced BST | 4->6->7 | 3 |
 
 The test suite in `lab_checks.py` demonstrates the difference empirically by
 searching for key `999` among 1,000 keys: 1,000 node comparisons on a
@@ -276,9 +276,9 @@ that repairs it. The first row is worked.
 | Insertion order | Unbalanced node and BF | Heavier child and BF | Signature | Repair |
 |---|---|---|---|---|
 | `[30, 20, 10]` | `30`, +2 | `20`, +1 | LL | `rotate_right(tree, 30)` |
-| `[10, 20, 30]` | TODO | TODO | TODO | TODO |
-| `[30, 10, 20]` | TODO | TODO | TODO | TODO |
-| `[10, 30, 20]` | TODO | TODO | TODO | TODO |
+| `[10, 20, 30]` | `10`, -2 | `20`, -1 | RR | `rotate_left(tree, 10)` |
+| `[30, 10, 20]` | `30`, +2 | `10`, -1 | LR | `rotate_left_right(tree, 30)` |
+| `[10, 30, 20]` | `10`, -2 | `30`, +1 | RL | `rotate_right_left(tree, 10)` |
 
 AVL trees strictly guarantee height $h < 1.44 \log_2(n + 2)$, ensuring
 $O(\log n)$ worst-case search.
@@ -383,8 +383,8 @@ the root, 20 is its left child, and 10 is 20's left child).
 | Node | Parent after | Left after | Right after | Height after |
 |---|---|---|---|---|
 | 20 | `None` (root) | 10 | 30 | 1 |
-| 10 | TODO | TODO | TODO | TODO |
-| 30 | TODO | TODO | TODO | TODO |
+| 10 | 20 | none | none | 0 |
+| 30 | 20 | none | none | 0 |
 
 Confirm that the in-order traversal of the keys remains `[10, 20, 30]` both
 before and after the rotation.
@@ -411,7 +411,7 @@ The AVL insertion checks will report `[TODO]` until you finish Part 4.
 ### 3.3 Short answer: Height update order
 
 **TODO 3.3:** When rotating node $x$ to the left around its right child $y$, why
-must the height of $x$ be recalculated before the height of $y$?
+must the height of $x$ be recalculated before the height of $y$? Because x becomes a child of y, the height of y depends on the new height of x, so the height of x must be recalculated.
 
 A single rotation modifies a fixed set of pointers and updates 2 height fields,
 taking $\Theta(1)$ time and $\Theta(1)$ auxiliary space. A double rotation
@@ -511,12 +511,12 @@ Insert the keys `[30, 10, 20]` into an empty AVL tree, once with each method.
 **TODO 4.2:** Answer the following:
 
 1. **Iterative insertion:** After inserting `20`, in what order does the
-   algorithm visit the ancestors, and how does it move between them?
+   algorithm visit the ancestors, and how does it move between them? Visits 10 first, then 30. it moves upward using parent pointers
 2. **Recursive insertion:** After inserting `20`, in what order do the
-   recursive calls finish rebalancing their nodes?
-3. Which node is the first unbalanced node in each version?
+   recursive calls finish rebalancing their nodes? it rebalances 10 first as its recursive call returns, then 30. it moves upward as recursive calls return
+3. Which node is the first unbalanced node in each version? Iterative: 30 Recursive: 30
 4. How much extra memory does each version use, in terms of the tree height
-   $h$? Explain why they differ.
+   $h$? Explain why they differ. Iterative uses O(1) space and recursive uses O(h) space. These differ because iterative insertion uses pointers and a set number of variables while recursive insertion keeps a one call stack frame for each level of the tree.
 
 Both versions run in $O(\log n)$ time because an AVL tree has height
 $O(\log n)$ and each rebalancing step does $O(1)$ work.
