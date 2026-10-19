@@ -98,15 +98,21 @@ have a different height, creating imbalances higher up.
 
 **TODO 1.1:** Briefly recall the three deletion cases from Lab 3/4:
 - What happens when the target node has 0 children?
+The node is a leaf, so remove it and disconnect it from its parent.
 - What happens when the target node has 1 child?
+The node's only child takes its place. The deleted node's parent points to the child, and the child's parent pointer is updated.
 - What happens when the target node has 2 children, and why is the in-order successor used?
+Find the in-order successor, which is the minimum node in the target's right subtree. The successor replaces the deleted node. It preserves BST ordering because it is the smallest key greater than the deleted key.
 
 ### 1.2 Short answer: Height change after deletion
 
 **TODO 1.2:** When you delete a leaf node from an AVL tree:
 - Does the leaf's parent's height change? By how much?
+It can. Its height can decrease by 1, but it may also remain unchanged if its other subtree still determines its height.
 - Can the grandparent's height change?
+Yes. If the parent's subtree becomes shorter, that height decrease can propagate to the grandparent.
 - Can the imbalance propagate to the root?
+Yes. A deletion can cause height changes and AVL violations at multiple ancestors, potentially all the way to the root.
 
 ---
 
@@ -128,19 +134,21 @@ All nodes are balanced: 20 has BF=0, 10 has BF=0, 30 has BF=0.
 ### 2.1 Trace: Single rotation after deletion
 
 **TODO 2.1:** Delete key `10` from the tree above. Trace the rebalancing:
+Tree: 10->20->30
+Delete 10: 20->30
 
-1. Perform BST deletion of 10 (it's a leaf). What is the tree after deletion?
+1. Perform BST deletion of 10 (it's a leaf). What is the tree after deletion? Delete 10: 20->30
 2. Rebalance from the parent of the deleted node (20).
-3. What is the balance factor at 20?
-4. Identify the violation signature (LL, RR, LR, or RL) and the required rotation.
+3. What is the balance factor at 20? -1
+4. Identify the violation signature (LL, RR, LR, or RL) and the required rotation. No issue
 5. After rotation, is the tree still imbalanced? If so, continue rebalancing.
 6. Draw the final tree and record the in-order traversal.
 
 | Step | Action | Tree state | Unbalanced node | BF | Signature | Rotation | Notes |
 |---|---|---|---|---|---|---|---|
 | 1 | Delete 10 | 20 root, 30 right child | - | - | - | - | Leaf deletion |
-| 2 | Rebalance from 20 | TODO | TODO | TODO | TODO | TODO | TODO |
-| 3 | After rotation | TODO | TODO | TODO | - | - | Final state |
+| 2 | Rebalance from 20 | 20 root, 30 right child | None | -1 | None | None | - |
+| 3 | After rotation | 20 root, 30 right child | None | -1 | - | - | Final state |
 
 ### 2.2 Trace: Double rotation after deletion
 
@@ -160,35 +168,55 @@ All nodes are balanced (you can verify balance factors are in {-1, 0, 1}).
 **TODO 2.2:** Delete key `5` from this tree. Trace the rebalancing:
 
 1. Perform BST deletion of 5 (it's a leaf).
-2. Rebalance from the parent of the deleted node (10).
-3. What is the balance factor at 10 after 5 is deleted?
-4. Identify the violation and required rotation(s).
-5. After the first rotation, is the tree still imbalanced at 20? Continue if needed.
+        20
+       /  \
+      10   30
+     / \   / \
+       15 25 35
+2. Rebalance from the parent of the deleted node (10). 10 is balanced
+3. What is the balance factor at 10 after 5 is deleted? -1
+4. Identify the violation and required rotation(s). No violation
+5. After the first rotation, is the tree still imbalanced at 20? Continue if needed. No rotation
 6. Draw the final tree and record the in-order traversal.
+        20
+       /  \
+      10   30
+     / \   / \
+       15 25 35
 
 | Step | Action | Current node | BF before | Signature | Rotation applied | BF after |
 |---|---|---|---|---|---|---|
-| 1 | Delete 5 | 10 | TODO | TODO | TODO | TODO |
-| 2 | Rebalance parent | 20 | TODO | TODO | TODO | TODO |
-| 3 | Continue up | (if needed) | TODO | TODO | TODO | TODO |
+| 1 | Delete 5 | 10 | 1 | none | none | -1 |
+| 2 | Rebalance parent | 20 | 0 | none | none | 0 |
+| 3 | Continue up | (if needed) | - | - | - | - |
 
 ### 2.3 Trace: Multiple rebalancing passes
 
 Insert the keys `[40, 20, 60, 10, 30, 50, 70]` to build a complete balanced BST.
+        40
+       /  \
+      20   50
+     / \   / \
+    10 30 60 70
 
 **TODO 2.3:** Delete key `20`. This is a 2-child deletion (has both 10 and 30 as children).
 Trace the rebalancing:
 
-1. Find the in-order successor of 20 (minimum of right subtree: 30).
+1. Find the in-order successor of 20 (minimum of right subtree: 30). 30
 2. Perform the transplant: replace 20 with 30.
-3. Rebalance from the parent of the deleted node onward.
+        40
+       /  \
+      30   50
+     / \   / \
+    10    60 70
+3. Rebalance from the parent of the deleted node onward. Tree is balanced
 4. At each step, identify any violation and apply the necessary rotation.
 5. Continue until no more imbalances exist.
 
 | Step | Current node | BF | Imbalanced? | Rotation | After rotation |
 |---|---|---|---|---|---|
-| 1 | 60 | TODO | TODO | TODO | TODO |
-| 2 | 40 (if needed) | TODO | TODO | TODO | TODO |
+| 1 | 60 | +1 | no | none | tree unchanged |
+| 2 | 40 (if needed) | 0 | no | none | tree unchanged |
 
 ---
 
@@ -238,8 +266,11 @@ measuring the number of rotations triggered by each operation.
 
 1. Why can a single deletion trigger multiple rotations at different ancestors,
    whereas a single insertion triggers at most one rotation?
+   Removing a node can decrease a subtree's height. That height decrease can propagate upward and cause several different ancestors to become unbalanced. Fixing one ancestor does not guarantee that ancestors above it remain balanced.
 2. What property of rotations ensures that insertion stops after one fix?
+After fixing the first AVL violation caused by insertion, the rotation restores that subtree to its previous height. Therefore, the height increase does not continue propagating upward.
 3. Does a deletion ever need to rebalance higher than the root? Explain.
+No. The root has no parent, so there are no ancestors above it. Once the root has been checked/rebalanced, the process is finished.
 
 ### 4.2 Short answer: Real-world implications
 
@@ -247,8 +278,10 @@ measuring the number of rotations triggered by each operation.
 in an AVL tree (e.g., a priority queue or cache).
 
 1. Based on the rotation cost, would you expect insertions or deletions to be slower?
+Deletions can be slower because a deletion may require rebalancing at multiple ancestors, potentially performing multiple rotations. An insertion needs at most one single or double rotation.
 2. If deletions become a bottleneck, what alternative data structure (from this course)
    might handle deletions more efficiently?
+   
 
 ---
 
