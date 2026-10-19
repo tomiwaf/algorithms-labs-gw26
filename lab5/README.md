@@ -118,65 +118,56 @@ Yes. A deletion can cause height changes and AVL violations at multiple ancestor
 
 ## Part 2: AVL Deletion Traces
 
-### Example: AVL tree from Lab 4 insertions
+### Example: AVL trees for deletion traces
 
-Recall the AVL tree built by inserting `[30, 10, 20]` iteratively (from Lab 4, Part 4.2).
-After all insertions, the tree is:
-
-```
-      20
-     /  \
-   10    30
-```
-
-All nodes are balanced: 20 has BF=0, 10 has BF=0, 30 has BF=0.
+For the traces below, we use AVL trees built carefully so that deletions trigger imbalances.
 
 ### 2.1 Trace: Single rotation after deletion
 
-**TODO 2.1:** Delete key `10` from the tree above. Trace the rebalancing:
-Tree: 10->20->30
-Delete 10: 20->30
+Start with this AVL tree:
+```
+      30
+     /  \
+   20    40
+   /
+  10
+```
+(All nodes balanced: 30 has BF=1, 20 has BF=1, others BF=0.)
 
-1. Perform BST deletion of 10 (it's a leaf). What is the tree after deletion? Delete 10: 20->30
+**TODO 2.1:** Delete key `10` from the tree above. Trace the rebalancing:
+
+1. Perform BST deletion of 10 (it's a leaf). What is the tree after deletion?
 2. Rebalance from the parent of the deleted node (20).
-3. What is the balance factor at 20? -1
-4. Identify the violation signature (LL, RR, LR, or RL) and the required rotation. No issue
+3. What is the balance factor at 20?
+4. Identify the violation signature (LL, RR, LR, or RL) and the required rotation.
 5. After rotation, is the tree still imbalanced? If so, continue rebalancing.
 6. Draw the final tree and record the in-order traversal.
 
 | Step | Action | Tree state | Unbalanced node | BF | Signature | Rotation | Notes |
 |---|---|---|---|---|---|---|---|
 | 1 | Delete 10 | 20 root, 30 right child | - | - | - | - | Leaf deletion |
-| 2 | Rebalance from 20 | 20 root, 30 right child | None | -1 | None | None | - |
-| 3 | After rotation | 20 root, 30 right child | None | -1 | - | - | Final state |
+| 2 | Rebalance from 20 | TODO | TODO | TODO | TODO | TODO | TODO |
+| 3 | After rotation | TODO | TODO | TODO | - | - | Final state |
 
 ### 2.2 Trace: Double rotation after deletion
 
-Build a new AVL tree by inserting `[20, 10, 30, 5, 15, 25, 35]` in balanced order.
-
-The tree should look like:
+Start with this AVL tree:
 ```
-        20
-       /  \
-      10   30
-     / \   / \
-    5  15 25 35
+      30
+     /  \
+   10    40
+    \
+    20
 ```
+(All nodes balanced: 30 has BF=0, 10 has BF=-1, others BF=0.)
 
-All nodes are balanced (you can verify balance factors are in {-1, 0, 1}).
-
-**TODO 2.2:** Delete key `5` from this tree. Trace the rebalancing:
+**TODO 2.2:** Delete key `40` from this tree. Trace the rebalancing:
 
 1. Perform BST deletion of 5 (it's a leaf).
-        20
-       /  \
-      10   30
-     / \   / \
-       15 25 35
-2. Rebalance from the parent of the deleted node (10). 10 is balanced
-3. What is the balance factor at 10 after 5 is deleted? -1
-4. Identify the violation and required rotation(s). No violation
-5. After the first rotation, is the tree still imbalanced at 20? Continue if needed. No rotation
+2. Rebalance from the parent of the deleted node (10).
+3. What is the balance factor at 10 after 5 is deleted?
+4. Identify the violation and required rotation(s).
+5. After the first rotation, is the tree still imbalanced at 20? Continue if needed.
 6. Draw the final tree and record the in-order traversal.
         20
        /  \
@@ -186,37 +177,27 @@ All nodes are balanced (you can verify balance factors are in {-1, 0, 1}).
 
 | Step | Action | Current node | BF before | Signature | Rotation applied | BF after |
 |---|---|---|---|---|---|---|
-| 1 | Delete 5 | 10 | 1 | none | none | -1 |
-| 2 | Rebalance parent | 20 | 0 | none | none | 0 |
-| 3 | Continue up | (if needed) | - | - | - | - |
+| 1 | Delete 5 | 10 | TODO | TODO | TODO | TODO |
+| 2 | Rebalance parent | 20 | TODO | TODO | TODO | TODO |
+| 3 | Continue up | (if needed) | TODO | TODO | TODO | TODO |
 
 ### 2.3 Trace: Multiple rebalancing passes
 
 Insert the keys `[40, 20, 60, 10, 30, 50, 70]` to build a complete balanced BST.
-        40
-       /  \
-      20   50
-     / \   / \
-    10 30 60 70
 
-**TODO 2.3:** Delete key `20`. This is a 2-child deletion (has both 10 and 30 as children).
+**TODO 2.3:** Delete key `30`. This is a 2-child deletion (has both 20 and 40 as children).
 Trace the rebalancing:
 
-1. Find the in-order successor of 20 (minimum of right subtree: 30). 30
+1. Find the in-order successor of 20 (minimum of right subtree: 30).
 2. Perform the transplant: replace 20 with 30.
-        40
-       /  \
-      30   50
-     / \   / \
-    10    60 70
-3. Rebalance from the parent of the deleted node onward. Tree is balanced
+3. Rebalance from the parent of the deleted node onward.
 4. At each step, identify any violation and apply the necessary rotation.
 5. Continue until no more imbalances exist.
 
-| Step | Current node | BF | Imbalanced? | Rotation | After rotation |
+| Step | Current node | BF | Imbalanced? | Violation | Rotation applied |
 |---|---|---|---|---|---|
-| 1 | 60 | +1 | no | none | tree unchanged |
-| 2 | 40 (if needed) | 0 | no | none | tree unchanged |
+| 1 | 60 | TODO | TODO | TODO | TODO |
+| 2 | 40 (if needed) | TODO | TODO | TODO | TODO |
 
 ---
 
