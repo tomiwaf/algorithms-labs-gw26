@@ -41,7 +41,7 @@ TODO:
 1. Explain what the code above is doing.
 A: The code above checks for the base cases to have easy returns and if n doesnt fall under the base case, it enters the recursive case and we do this all over again
 2. What happens if we remove the "if ... return ..." and only keep the last line?
-A: There would be an index error
+A: It would recurse indefinitely until Python raises RecursionError, because there would be no base case.
 3. What is fibonacci(20)? how much time did it take to calculate that?
 A: 6765, 1.4535e-03 seconds
 4. What is fibonacci(30)? how much time did it take to calculate that?
@@ -60,7 +60,7 @@ TODO:
 3. How many function calls does fibonacci(10) take? 109
 4. Why is it so slow? Where does the complexity come from? The recursive calls make the time complexity higher
 5. Is this O(n)? is this O(2^n)? Why? O(2^n) because for every new integer from 1 to n, there are 2 function calls.
-6. Is this Ω(n)? Why?
+6. Is this Ω(n)? Why? Yes. The number of calls grows exponentially, so it also grows at least linearly.
 ```
 
 ## Memoization Optimization
@@ -70,10 +70,10 @@ Take a look at ``fibonacci_counting.py``, where memoization is used.
 TODO:
 1. How is this one different from the previous one? the function memorizes the values it has already calculated
 2. How much time does it take to calculate fibonacci(30)? 7.7500e-05 seconds
-3. Why is it often faster? 
-4. Also modify this file to count: how many times the function had to be called for fibonacci(30)?
-5. Is this O(n)? is this O(2^n)? Why?
-6. Is this Ω(n)? is this Ω(2^n)? Why?
+3. Why is it often faster? Previously computed values are reused, avoiding repeated recursive subproblems.
+4. Also modify this file to count: how many times the function had to be called for fibonacci(30)? 57 calls with this implementation (counting calls including cached results).
+5. Is this O(n)? is this O(2^n)? Why? O(n), because only n distinct subproblems are computed; it is also technically O(2^n) but that is a loose upper bound.
+6. Is this Ω(n)? is this Ω(2^n)? Why? Ω(n), since n distinct values must be computed, but not Ω(2^n).
 ```
 
 ## Extension: Staircase Problem

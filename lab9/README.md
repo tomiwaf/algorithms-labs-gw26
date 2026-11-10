@@ -275,3 +275,10 @@ python3 graph_algorithms.py
 Unfinished functions report `[TODO]`, incorrect results report `[FAIL]`, and
 successful checks report `[PASS]`. When all checks pass, the command returns
 exit code `0`.
+
+
+---
+
+## Implementation review notes
+
+**Completed implementation notes.** Kahn's algorithm counts in-degrees, queues all zero-in-degree vertices in increasing order, and decreases neighbors' in-degrees as vertices are removed. If fewer than V vertices are output, a directed cycle exists. Disjoint-set `find` uses path compression and `union` uses rank, attaching the second root beneath the first on ties. Kruskal sorts edges by nondecreasing weight (preserving input tie order), accepts an edge only when its endpoints belong to different components, and returns a minimum spanning forest. Sorting dominates at O(E log E); union-find operations are near-constant amortized time.

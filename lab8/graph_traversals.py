@@ -1,18 +1,7 @@
 """Complete BFS, path reconstruction, and recursive DFS for Lab 8."""
-
 from collections import deque
-
-WHITE, GRAY, BLACK = 0, 1, 2
-
-EXAMPLE_GRAPH = [
-    [1, 2],
-    [0, 3, 4],
-    [0, 4],
-    [1, 4],
-    [1, 2, 3],
-    [],
-]
-
+WHITE, GRAY, BLACK = (0, 1, 2)
+EXAMPLE_GRAPH = [[1, 2], [0, 3, 4], [0, 4], [1, 4], [1, 2, 3], []]
 
 def bfs(graph, source):
     """Return (dist, parent) lists for BFS from a valid source vertex.
@@ -20,18 +9,21 @@ def bfs(graph, source):
     Use the listed neighbor order. Unreachable distances stay infinite.
     """
     n = len(graph)
-    visited = [False] * n
-    dist = [float("inf")] * n
+    dist = [float('inf')] * n
     parent = [None] * n
+    visited = [False] * n
+    queue = deque([source])
     visited[source] = True
     dist[source] = 0
-    queue = deque([source])
-
-    # TODO 2.2: process the queue and discover each unvisited neighbor
-    raise NotImplementedError("Complete bfs")
-
-    return dist, parent
-
+    while queue:
+        u = queue.popleft()
+        for v in graph[u]:
+            if not visited[v]:
+                visited[v] = True
+                dist[v] = dist[u] + 1
+                parent[v] = u
+                queue.append(v)
+    return (dist, parent)
 
 def reconstruct_path(parent, source, target):
     """Return a source-to-target path, or [] when the target is unreachable.
@@ -40,12 +32,12 @@ def reconstruct_path(parent, source, target):
     """
     path = []
     current = target
-
-    # TODO 2.3: follow parents, reverse the path, and check that it starts at source
-    raise NotImplementedError("Complete reconstruct_path")
-
-    return path
-
+    while current is not None:
+        path.append(current)
+        if current == source:
+            return path[::-1]
+        current = parent[current]
+    return []
 
 def dfs(graph):
     """Return (parent, discovered, finished) for a full recursive DFS forest.
@@ -62,16 +54,20 @@ def dfs(graph):
 
     def visit(u):
         nonlocal time
-        # TODO 3.2: record discovery, explore white neighbors, and record finishing
-        raise NotImplementedError("Complete DFS visit")
-
-    # TODO 3.2: start a visit at each vertex that is still white
-    raise NotImplementedError("Complete DFS outer loop")
-
-    return parent, discovered, finished
-
-
-if __name__ == "__main__":
+        color[u] = GRAY
+        time += 1
+        discovered[u] = time
+        for v in graph[u]:
+            if color[v] == WHITE:
+                parent[v] = u
+                visit(v)
+        color[u] = BLACK
+        time += 1
+        finished[u] = time
+    for u in range(n):
+        if color[u] == WHITE:
+            visit(u)
+    return (parent, discovered, finished)
+if __name__ == '__main__':
     from lab_checks import check_graph_traversals
-
     raise SystemExit(check_graph_traversals(bfs, reconstruct_path, dfs))

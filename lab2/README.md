@@ -429,3 +429,10 @@ python3 quicksort_practice.py
 python3 mergesort_practice.py
 python3 heapsort_practice.py
 ```
+
+
+---
+
+## Implementation review notes
+
+**Completed implementation notes.** Lomuto partition scans from `low` to `high - 1`, moving values `<= pivot` left, and places the final pivot at `i + 1`. Quicksort has average time O(n log n), worst time O(n²), and is generally not stable. Merge sort takes O(n log n) time and O(n) auxiliary space; choosing the left element on a tie preserves stability. Bottom-up heap construction takes O(n); heap sort takes O(n log n) time, O(1) extra array space, and is not stable. A min-heap produces descending order when its minimum is repeatedly moved to the right end.

@@ -84,9 +84,9 @@ occurs. Record where $j$ stops and whether you add $s$ to the results.
 | Shift `s` | Text indices checked | Final `j` | Append `s`? |
 |---|---|---|---|
 | 1 | `1` | 0 | No |
-| 2 | TODO | TODO | TODO |
-| 4 | TODO | TODO | TODO |
-| 5 | TODO | TODO | TODO |
+| 2 | `2,3` | 1 | No |
+| 4 | `4,5,6` | 2 | No |
+| 5 | `5,6,7` | 3 | Yes |
 
 ### 1.2 Implementation
 
@@ -174,9 +174,13 @@ At shift `6`, the hash is `7`; all five characters match, so record `6`.
 1. **Move from shift `6` to `7`.** Which digit leaves the window, and which
    digit enters? Substitute them into the rolling-hash formula and calculate
    the new hash.
+   3 goes out, and 2 comes in, prev hash is 7
+   t7 = (10(7 - 3(3)) + 2) mod 13 = 8
+   
 2. **Check shift `12`.** Its hash is `7`, so compare the characters. List the
    text and pattern indices checked before stopping. Is this a match or a
    spurious hit?
+   At shift 12, the text window is '67399' and the pattern is '31415', which don't match so it's a spurious hit.
 
 ### 2.2 Implementation
 
@@ -203,8 +207,8 @@ hash comparisons and character checks.
 
 | Case | Build hashes | Search | Total |
 |---|---|---|---|
-| Best | TODO | TODO | TODO |
-| Worst | TODO | TODO | TODO |
+| Best | Theta(m) | Theta(n - m + 1) | Theta(m + n) | Every window hash differs from the pattern hash, so zero windows require character verification.
+| Worst | Theta(m) | Theta(m(n - m + 1)) | Theta(m(n - m + 1)) | All (n-m+1) windows match the pattern, requiring m character comparisons per window.
 
 For each case, explain in one sentence how many windows need character checks
 and how many characters are checked in each one.
@@ -301,11 +305,11 @@ The first row is worked: `P[2] == P[4]`, so `k` increases to `3`.
 | Index `j` | Starting `k` | Fallbacks | `pi[j]` |
 |---|---|---|---|
 | 4 | 2 | none | 3 |
-| 5 | 3 | TODO | TODO |
-| 6 | 0 | TODO | TODO |
+| 5 | 3 | 3->1->0 | 0 |
+| 6 | 0 | none | 1 |
 
 Now trace the matcher at `i = 8`, starting with `q = 6`. Which pattern index
-is compared with `T[8]`? What shift is recorded, and what is `q` afterward?
+is compared with `T[8]`? What shift is recorded, and what is `q` afterward? Pattern index 6, recorded shift 2, final q = 1
 
 ### 3.2 Implementation
 
@@ -330,12 +334,15 @@ Give tight bounds in terms of $n$ and $m$.
 
 | Case | Build `pi` | Search | Total |
 |---|---|---|---|
-| Best | TODO | TODO | TODO |
-| Worst | TODO | TODO | TODO |
+| Best | Theta(m) | Theta(n) | Theta(n + m) |
+| Worst | Theta(m) | Theta(n) | Theta(n + m) |
 
 Explain the worst-case bound in a few lines. Across the whole scan, how often
 can `q` increase? How does that limit the number of fallbacks? Use the same
 reasoning for `k` when building `pi`.
+During the search, q can increase at most once per text character, so it increases at most n times. Each fallback decreases q, which means the total number of fallbacks is also O(n). Therefore, searching takes Theta(n) time.
+
+Similarly, when building the prefix table, k can increase at most m-1 times, so there are at most O(m) fallbacks. Thus, building pi takes Theta(m) time.
 
 ---
 
@@ -352,3 +359,10 @@ python3 string_search.py
 - Successful checks report `[PASS]`.
 
 When all checks pass, the command returns exit code `0`.
+
+
+---
+
+## Implementation review notes
+
+**Completed implementation notes.** Naive search compares each window (worst O(nm)). Rabin–Karp computes a rolling polynomial hash and verifies every hash match to prevent false positives; expected O(n+m), worst O(nm) if collisions occur. The KMP prefix array stores the longest proper prefix that is also a suffix for each prefix. On mismatch KMP falls back to `pi[q-1]` without moving backward in the text, giving O(n+m) time. All three searches report overlapping occurrences.

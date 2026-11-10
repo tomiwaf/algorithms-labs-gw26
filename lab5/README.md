@@ -283,3 +283,10 @@ failing. When all checks pass, the command returns exit code `0`.
 
 The profiling output compares insertion vs. deletion rotation counts on random keys
 and provides empirical evidence of why deletion is costlier.
+
+
+---
+
+## Implementation review notes
+
+**Completed implementation notes.** AVL deletion first performs ordinary BST deletion (leaf, one child, or in-order successor), then recomputes heights and rebalances ancestors. Unlike insertion, deletion can reduce subtree height after a rotation, so rebalancing may have to continue toward the root. LL/RR require one rotation; LR/RL require two. Search, deletion, and upward rebalancing take O(log n) in an AVL tree.

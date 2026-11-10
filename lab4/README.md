@@ -538,3 +538,10 @@ python3 rotation_practice.py
 
 Each practice file exits with a nonzero exit code if any check is unfinished or
 failing. When all checks pass, both commands return exit code `0`.
+
+
+---
+
+## Implementation review notes
+
+**Completed implementation notes.** Balance factor is `height(left) - height(right)` with null height -1. An LL imbalance requires a right rotation, RR a left rotation, LR left-then-right, and RL right-then-left. Rotations preserve the BST ordering and repair parent pointers and node heights. AVL insertion follows a BST search path, updates heights upward, and fixes the first unbalanced ancestor. An AVL tree has height O(log n), so insertion and lookup are O(log n). Duplicate insertions return the existing node without modifying the tree.

@@ -396,3 +396,10 @@ python3 probing_practice.py
 - Any fully working function reports `[PASS]`.
 
 When all checks pass, all three commands return exit code `0`.
+
+
+---
+
+## Implementation review notes
+
+**Completed implementation notes.** Division hashing is `key % m`; multiplication hashing is `floor(m * ((key*A) % 1))`. Separate chaining stores collisions in buckets, updates existing keys in place, and resizes when `size/capacity > max_load`. Expected lookup/insertion is O(1) with controlled load and well-distributed hashes; worst case is O(n). Linear probing visits `(key % m + i) % m` until a match or empty slot. Insertion fails if all slots are occupied; primary clustering increases probes at high load.

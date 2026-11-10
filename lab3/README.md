@@ -381,3 +381,10 @@ python3 bst_practice.py
 
 Each practice file exits with a nonzero exit code if any check is unfinished or
 failing. When all checks pass, both commands return exit code `0`.
+
+
+---
+
+## Implementation review notes
+
+**Completed implementation notes.** A max-heap uses children `2i+1`, `2i+2`; sift-down swaps with the largest child until the heap property is restored. Heap sort is O(n log n) time and O(1) extra space. BST insertion descends to a null child and sets its parent. BST deletion handles a leaf, one child, or two children; for two children the in-order successor replaces the deleted node. BST search, insertion, and deletion take O(h), where h is tree height (O(log n) balanced, O(n) skewed).

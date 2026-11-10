@@ -269,3 +269,10 @@ Unfinished functions report `[TODO]`, incorrect results report `[FAIL]`, and
 successful checks report `[PASS]`. The checks cover cycles, directed edges,
 disconnected vertices, shortest paths, and DFS timestamps. When all checks
 pass, the command returns exit code `0`.
+
+
+---
+
+## Implementation review notes
+
+**Completed implementation notes.** BFS marks vertices when enqueued, assigns distance from the source and parent at first discovery, and explores vertices in nondecreasing distance. Following parent pointers backward reconstructs a shortest unweighted path. DFS colors are WHITE (unseen), GRAY (active recursion), BLACK (finished). Each discovery and finishing increments the global timestamp; a full forest restarts from each still-WHITE vertex. With adjacency lists BFS and DFS take O(V+E) time, versus O(V²) for adjacency matrices.
